@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="description" content="Planet MC — Tienda oficial del servidor de Minecraft. Rangos, kits, llaves y más."/>
+  <meta name="keywords" content="Planet MC, Minecraft, servidor, tienda, rangos, kits, survival"/>
+  <meta property="og:title" content="Planet MC Store"/>
+  <meta property="og:description" content="Tienda oficial de Planet MC — El mejor servidor de Minecraft"/>
+  <title>Planet MC — Tienda Oficial</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- NOISE OVERLAY -->
+<div class="noise-overlay"></div>
+
+<!-- AMBIENT BG -->
+<div class="ambient-bg">
+  <div class="amb-orb amb-1"></div>
+  <div class="amb-orb amb-2"></div>
+  <div class="amb-orb amb-3"></div>
+</div>
+
+<!-- PARTICLES -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loader-wrap">
+    <div class="loader-logo-mark">
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+    <div class="loader-wordmark">Planet <em>MC</em></div>
+    <div class="loader-track"><div class="loader-fill" id="loader-fill"></div></div>
+    <div class="loader-status" id="loader-status">Iniciando tienda...</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ NAV ══════════════════════ -->
+<div class="nav-wrap" id="nav-wrap">
+  <nav class="nav-inner" id="nav-inner">
+
+    <!-- Logo -->
+    <a href="#home" class="logo" data-scroll="home">
+      <div class="logo-mark">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+      <span class="logo-text">Planet <em class="logo-mc">MC</em></span>
+    </a>
+
+    <!-- Links -->
+    <div class="nav-menu" id="nav-menu">
+      <a href="#home" class="nav-link active" data-scroll="home">
+        <i class="fas fa-home"></i> Inicio
+      </a>
+      <a href="#store" class="nav-link" data-scroll="store">
+        <i class="fas fa-store"></i> Tienda
+      </a>
+      <a href="https://discord.gg/planetmc" target="_blank" class="nav-link nav-discord">
+        <i class="fab fa-discord"></i> Discord
+      </a>
+      <a href="#soporte" class="nav-link" data-scroll="soporte">
+        <i class="fas fa-headset"></i> Soporte
+      </a>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="nav-right">
+      <!-- User Btn -->
+      <div class="nav-user-wrap" id="nav-user-wrap">
+        <button class="nav-user-btn" id="nav-user-btn" onclick="toggleUserDrop()">
+          <div class="nav-user-avatar" id="nav-user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <span class="nav-user-name" id="nav-user-name">Iniciar sesión</span>
+          <i class="fas fa-chevron-down nav-user-chevron" id="nav-chevron"></i>
+        </button>
+
+        <!-- User Dropdown -->
+        <div class="nav-user-drop glass-drop" id="nav-user-drop">
+          <div class="drop-label">Cuenta Minecraft</div>
+          <div class="drop-platform-row">
+            <button class="plat-btn active" id="plat-java" onclick="selectPlatform('java')">☕ Java</button>
+            <button class="plat-btn" id="plat-bedrock" onclick="selectPlatform('bedrock')">🪨 Bedrock</button>
+          </div>
+          <div class="drop-input-row">
+            <input type="text" id="mc-input" placeholder="Escribe tu username..." maxlength="16" oninput="onUsernameType()"/>
+            <div class="drop-spinner hidden" id="drop-spinner">
+              <div class="spin-ring"></div>
+            </div>
+            <div class="drop-check hidden" id="drop-check"><i class="fas fa-check"></i></div>
+          </div>
+          <div class="drop-bedrock-hint hidden" id="bedrock-hint">Bedrock: sin el punto "." extra</div>
+
+          <!-- Player Preview -->
+          <div class="drop-preview hidden" id="drop-preview">
+            <img class="drop-preview-skin" id="preview-skin" src="" alt="skin"/>
+            <div class="drop-preview-info">
+              <div class="drop-preview-name" id="preview-name">—</div>
+              <div class="drop-preview-badge" id="preview-badge"></div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary drop-confirm-btn" id="drop-confirm" onclick="confirmLogin()" disabled>
+            <i class="fas fa-rocket"></i> Confirmar y entrar
+          </button>
+          <button class="drop-logout-btn hidden" id="drop-logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+          </button>
+        </div>
+      </div>
+
+      <!-- Cart -->
+      <button class="icon-btn" id="cart-icon-btn" onclick="openCart()" title="Carrito">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge hidden" id="cart-badge">0</span>
+      </button>
+
+      <!-- Hamburger -->
+      <button class="nav-hamburger" id="hamburger" onclick="toggleMobile()">
+        <i class="fas fa-bars" id="ham-icon"></i>
+      </button>
+    </div>
+  </nav>
+</div>
+
+<!-- ══════════════════════ DRAWER OVERLAY ══════════════════════ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeCart()"></div>
+
+<!-- ══════════════════════ CART DRAWER ══════════════════════ -->
+<aside class="cart-drawer" id="cart-drawer">
+  <div class="drawer-head">
+    <div>
+      <h3 class="drawer-title"><i class="fas fa-shopping-cart"></i> Carrito</h3>
+      <div class="cart-count-label" id="cart-count-label">0 productos</div>
+    </div>
+    <button class="icon-btn" onclick="closeCart()"><i class="fas fa-times"></i></button>
+  </div>
+
+  <!-- Logged user in cart -->
+  <div class="drawer-user" id="drawer-user-section">
+    <div class="drawer-user-label">
+      <div class="status-dot" id="drawer-status-dot"></div>
+      Comprando como
+    </div>
+    <div class="drawer-user-not-logged" id="drawer-not-logged">
+      <i class="fas fa-user-slash"></i>
+      <span>No has iniciado sesión</span>
+      <button class="btn btn-sm btn-ghost" onclick="closeCart(); openUserDrop();">Iniciar sesión</button>
+    </div>
+    <div class="drawer-user-logged hidden" id="drawer-logged">
+      <img id="drawer-head" src="" alt="head" class="drawer-head-img"/>
+      <div>
+        <div class="drawer-username" id="drawer-username">—</div>
+        <div class="drawer-platform" id="drawer-platform"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div class="drawer-items" id="drawer-items">
+    <div class="empty-cart" id="empty-cart-msg">
+      <div class="empty-cart-icon"><i class="fas fa-box-open"></i></div>
+      <p>Tu carrito está vacío</p>
+      <small>Explora la tienda y añade productos</small>
+    </div>
+    <div id="cart-items-list"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="drawer-foot">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cart-total-amount">$0.00</span>
+    </div>
+    <button class="btn btn-primary btn-lg" style="width:100%" onclick="openCheckout()" id="checkout-btn">
+      <i class="fas fa-credit-card"></i> Completar Compra
+    </button>
+    <p class="cart-secure-note"><i class="fas fa-lock"></i> Pago seguro vía Tebex</p>
+  </div>
+</aside>
+
+<!-- ══════════════════════ CHECKOUT MODAL ══════════════════════ -->
+<div class="modal-overlay hidden" id="checkout-overlay">
+  <div class="modal-box glass-card" id="checkout-modal">
+    <button class="modal-close icon-btn" onclick="closeCheckout()"><i class="fas fa-times"></i></button>
+    <div class="modal-header">
+      <div class="modal-header-icon"><i class="fas fa-shield-check"></i></div>
+      <h2>Confirmar Compra</h2>
+      <p>Revisa tu pedido antes de continuar a Tebex</p>
+    </div>
+
+    <div class="checkout-user-row" id="checkout-user-row">
+      <img id="co-head" src="" alt="" class="co-head-img"/>
+      <div>
+        <div id="co-username" class="co-username"></div>
+        <div id="co-platform" class="co-platform-badge"></div>
+      </div>
+    </div>
+
+    <div class="checkout-items" id="checkout-items-list"></div>
+
+    <div class="checkout-total-row">
+      <span>Total a pagar</span>
+      <span id="co-total" class="co-total"></span>
+    </div>
+
+    <div class="checkout-terms">
+      <label class="term-label">
+        <input type="checkbox" id="term-1" onchange="evalTerms()"/>
+        <span class="checkmark"></span>
+        Acepto los <a href="#">Términos y Condiciones</a>
+      </label>
+      <label class="term-label">
+        <input type="checkbox" id="term-2" onchange="evalTerms()"/>
+        <span class="checkmark"></span>
+        Acepto la <a href="#">Política de Privacidad</a>
+      </label>
+      <label class="term-label">
+        <input type="checkbox" id="term-3" onchange="evalTerms()"/>
+        <span class="checkmark"></span>
+        Entiendo que las compras digitales <strong>no tienen reembolso</strong>
+      </label>
+    </div>
+
+    <button class="btn btn-primary btn-lg" style="width:100%; margin-top:8px" id="go-tebex-btn" onclick="goToTebex()" disabled>
+      <i class="fas fa-external-link-alt"></i> Ir a Tebex y Pagar
+    </button>
+    <p class="tebex-note"><i class="fas fa-lock"></i> Serás redirigido a Tebex de forma segura</p>
+  </div>
+</div>
+
+<!-- ══════════════════════ MOBILE MENU ══════════════════════ -->
+<div class="mobile-menu hidden" id="mobile-menu">
+  <div class="mobile-menu-head">
+    <div class="logo">
+      <div class="logo-mark sm">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+      Planet <em class="logo-mc">MC</em>
+    </div>
+    <button class="icon-btn" onclick="toggleMobile()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="mobile-menu-body">
+    <a href="#home" class="mobile-link" onclick="toggleMobile()"><i class="fas fa-home"></i> Inicio <i class="fas fa-chevron-right"></i></a>
+    <a href="#store" class="mobile-link" onclick="toggleMobile()"><i class="fas fa-store"></i> Tienda <i class="fas fa-chevron-right"></i></a>
+    <a href="https://discord.gg/planetmc" target="_blank" class="mobile-link discord"><i class="fab fa-discord"></i> Discord <i class="fas fa-chevron-right"></i></a>
+    <a href="#soporte" class="mobile-link" onclick="toggleMobile()"><i class="fas fa-headset"></i> Soporte <i class="fas fa-chevron-right"></i></a>
+  </div>
+</div>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<main>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <div class="hero-gradient"></div>
+    <div class="hero-grid"></div>
+  </div>
+
+  <!-- Server IPs -->
+  <div class="server-ips">
+    <button class="server-ip-pill" onclick="copyIP('play.planetmc.net', this)">
+      <span class="server-ip-tag">Java</span>
+      <span class="server-ip-dot"></span>
+      <span class="server-ip-addr">play.planetmc.net</span>
+      <i class="fas fa-copy" style="font-size:10px;opacity:.4"></i>
+      <span class="server-ip-copied">¡Copiado!</span>
+    </button>
+    <button class="server-ip-pill" onclick="copyIP('be.planetmc.net', this)">
+      <span class="server-ip-tag bedrock">Bedrock</span>
+      <span class="server-ip-dot"></span>
+      <span class="server-ip-addr">be.planetmc.net</span>
+      <i class="fas fa-copy" style="font-size:10px;opacity:.4"></i>
+      <span class="server-ip-copied">¡Copiado!</span>
+    </button>
+  </div>
+
+  <div class="hero-inner container">
+    <div class="eyebrow"><span class="eyebrow-dot"></span> Servidor Premium · Latinoamérica</div>
+
+    <h1 class="hero-title">
+      La mejor experiencia<br/>
+      <span class="hero-title-accent">Minecraft</span> del continente
+    </h1>
+
+    <p class="hero-sub">Rangos exclusivos, kits épicos, llaves misteriosas y mucho más. Únete a miles de jugadores en Planet MC.</p>
+
+    <div class="hero-ctas">
+      <a href="https://discord.gg/planetmc" target="_blank" class="btn btn-primary btn-lg">
+        <i class="fab fa-discord"></i> Unirse al Discord
+      </a>
+      <a href="#store" class="btn btn-lg" data-scroll="store">
+        <i class="fas fa-store"></i> Ver Tienda
+      </a>
+    </div>
+
+    <!-- Stats row -->
+    <div class="hero-stats-row">
+      <div class="hero-stat">
+        <strong class="stat-num" data-target="1247">0</strong>
+        <span>Jugadores Online</span>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <strong class="stat-num" data-target="9812">0</strong>
+        <span>Discord</span>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <strong class="stat-num" data-target="2403">0</strong>
+        <span>Donadores</span>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <strong class="stat-num" data-target="4">0</strong>
+        <span>Años online</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MONTHLY META ─── -->
+<section class="section-donate">
+  <div class="container">
+    <div class="donate-grid-3">
+
+      <!-- Meta card -->
+      <div class="card donate-meta">
+        <div class="glow-ring"></div>
+        <div class="donate-head">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> Meta Mensual</div>
+          <div class="donate-date" id="meta-month-label">Mayo 2025</div>
+        </div>
+        <div class="meta-goal-row">
+          <div class="meta-pct-num" id="meta-pct">0%</div>
+          <div class="meta-goal-reward">
+            Objetivo: <strong id="meta-goal-val">$500</strong>
+          </div>
+        </div>
+        <div class="progress-track progress-track-lg">
+          <div class="progress-fill" id="meta-fill" style="width:0%"></div>
+        </div>
+        <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--text-mute)">Recaudado este mes</span>
+          <span style="font-family:var(--font-display);font-weight:700;color:var(--accent)" id="meta-raised">$0</span>
+        </div>
+        <div class="meta-chart-bottom">
+          <div class="meta-chart-head">
+            <span class="meta-chart-live">
+              <span class="server-status-dot-sm online"></span>
+              Servidor online · <strong id="online-count">—</strong> jugadores
+            </span>
+            <span class="meta-chart-label">LIVE</span>
+          </div>
+          <!-- Mini bar chart -->
+          <div class="mini-bar-chart" id="mini-bar-chart"></div>
+        </div>
+      </div>
+
+      <!-- Podium / Top Donadores -->
+      <div class="card donate-podium">
+        <div class="glow-ring"></div>
+        <div class="donate-head">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> Top Donadores</div>
+          <div class="donate-live"><span class="server-status-dot-sm online"></span> Este mes</div>
+        </div>
+        <div class="podium" id="podium-container">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- Recientes -->
+      <div class="card donate-recent">
+        <div class="glow-ring"></div>
+        <div class="donate-head">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> Donaciones Recientes</div>
+          <div class="donate-live"><span class="server-status-dot-sm online"></span> Tiempo real</div>
+        </div>
+        <ul class="recent-list" id="recent-list">
+          <!-- Filled by JS -->
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── STORE ─── -->
+<section class="section" id="store">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-dot"></span> Survival · Planet MC</div>
+        <h2 class="section-title">Elige tu <span style="color:var(--accent)">categoría</span></h2>
+      </div>
+      <p class="section-sub">Todo lo que necesitas para dominar el servidor. Rangos, kits, cosméticos y mucho más.</p>
+    </div>
+
+    <!-- Category filter strip -->
+    <div class="store-filters">
+      <div class="cat-strip" id="cat-strip">
+        <button class="cat-chip active" data-cat="all" onclick="filterCat(this,'all')">
+          <i class="fas fa-globe"></i> Todos
+          <span class="cat-count" id="count-all">0</span>
+        </button>
+        <button class="cat-chip" data-cat="rangos-perm" onclick="filterCat(this,'rangos-perm')">
+          <i class="fas fa-crown"></i> Rangos Perm.
+          <span class="cat-count" id="count-rangos-perm">0</span>
+        </button>
+        <button class="cat-chip" data-cat="rangos-temp" onclick="filterCat(this,'rangos-temp')">
+          <i class="fas fa-clock"></i> Rangos Temp.
+          <span class="cat-count" id="count-rangos-temp">0</span>
+        </button>
+        <button class="cat-chip" data-cat="kits" onclick="filterCat(this,'kits')">
+          <i class="fas fa-toolbox"></i> Kits
+          <span class="cat-count" id="count-kits">0</span>
+        </button>
+        <button class="cat-chip" data-cat="llaves" onclick="filterCat(this,'llaves')">
+          <i class="fas fa-key"></i> Llaves
+          <span class="cat-count" id="count-llaves">0</span>
+        </button>
+        <button class="cat-chip" data-cat="spawners" onclick="filterCat(this,'spawners')">
+          <i class="fas fa-spider"></i> Spawners
+          <span class="cat-count" id="count-spawners">0</span>
+        </button>
+        <button class="cat-chip" data-cat="items" onclick="filterCat(this,'items')">
+          <i class="fas fa-magic"></i> Ítems
+          <span class="cat-count" id="count-items">0</span>
+        </button>
+        <button class="cat-chip" data-cat="cosmeticos" onclick="filterCat(this,'cosmeticos')">
+          <i class="fas fa-paint-brush"></i> Cosméticos
+          <span class="cat-count" id="count-cosmeticos">0</span>
+        </button>
+        <button class="cat-chip" data-cat="boosters" onclick="filterCat(this,'boosters')">
+          <i class="fas fa-rocket"></i> Boosters
+          <span class="cat-count" id="count-boosters">0</span>
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="store-search-row">
+        <div class="store-search">
+          <i class="fas fa-search"></i>
+          <input type="text" id="store-search-input" placeholder="Buscar productos..." oninput="searchProducts()"/>
+          <button class="search-clear hidden" id="search-clear" onclick="clearSearch()"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products grid -->
+    <div class="product-grid" id="product-grid">
+      <!-- Filled by JS -->
+    </div>
+
+    <div class="empty-products hidden" id="empty-products">
+      <div class="empty-products-icon"><i class="fas fa-search"></i></div>
+      <p>No se encontraron productos</p>
+      <small>Intenta con otro término o categoría</small>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── SOPORTE ─── -->
+<section class="section" id="soporte">
+  <div class="container">
+    <div class="card support-card">
+      <div class="glow-ring"></div>
+      <div class="support-inner">
+        <div>
+          <div class="eyebrow" style="margin-bottom:16px"><span class="eyebrow-dot"></span> Soporte 24/7</div>
+          <h2 class="section-title">¿Necesitas <span style="color:var(--accent)">ayuda?</span></h2>
+          <p class="section-sub" style="max-width:100%;margin-top:12px">
+            Nuestro equipo está disponible para ayudarte con cualquier problema. Únete al Discord o abre un ticket de soporte.
+          </p>
+          <div class="support-ctas">
+            <a href="https://discord.gg/planetmc" target="_blank" class="btn btn-primary">
+              <i class="fab fa-discord"></i> Abrir ticket en Discord
+            </a>
+            <a href="#" class="btn">
+              <i class="fas fa-envelope"></i> Enviar email
+            </a>
+          </div>
+        </div>
+        <div class="support-stats">
+          <div><strong>~5 min</strong><span>Tiempo respuesta</span></div>
+          <div><strong>24/7</strong><span>Disponibilidad</span></div>
+          <div><strong>99.9%</strong><span>Uptime servidor</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:14px">
+          <div class="logo-mark sm">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+          Planet <em class="logo-mc">MC</em>
+        </div>
+        <p style="color:var(--text-dim);font-size:13px;line-height:1.7;max-width:260px">
+          El servidor de Minecraft más épico de Latinoamérica. Únete a nuestra comunidad.
+        </p>
+        <div style="display:flex;gap:10px;margin-top:18px">
+          <a href="https://discord.gg/planetmc" target="_blank" class="icon-btn"><i class="fab fa-discord"></i></a>
+          <a href="#" class="icon-btn"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="icon-btn"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="icon-btn"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div>
+        <h5>Tienda</h5>
+        <ul>
+          <li><a href="#store" onclick="filterCat(null,'rangos-perm')">Rangos Permanentes</a></li>
+          <li><a href="#store" onclick="filterCat(null,'rangos-temp')">Rangos Temporales</a></li>
+          <li><a href="#store" onclick="filterCat(null,'kits')">Kits</a></li>
+          <li><a href="#store" onclick="filterCat(null,'llaves')">Llaves</a></li>
+          <li><a href="#store" onclick="filterCat(null,'cosmeticos')">Cosméticos</a></li>
+          <li><a href="#store" onclick="filterCat(null,'boosters')">Boosters</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Servidor</h5>
+        <ul>
+          <li><a href="#">play.planetmc.net</a></li>
+          <li><a href="#">Reglas del servidor</a></li>
+          <li><a href="#">Mapa del mundo</a></li>
+          <li><a href="#">Reportar bug</a></li>
+          <li><a href="#">Aplicar como staff</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Términos y condiciones</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Política de reembolsos</a></li>
+          <li><a href="#">EULA de Minecraft</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Planet MC — No afiliado con Mojang Studios</span>
+      <span style="color:var(--accent);font-family:var(--font-mono);font-size:11px">play.planetmc.net</span>
+    </div>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div id="toast-wrap"></div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay hidden" id="detail-overlay">
+  <div class="modal card" id="detail-modal" style="--p-color:var(--accent);--p-deep:var(--bg-1)">
+    <button class="modal-close icon-btn" onclick="closeDetail()"><i class="fas fa-times"></i></button>
+    <div class="modal-left" id="detail-left">
+      <div class="modal-visual" id="detail-visual">
+        <div class="modal-visual-bg"></div>
+        <div class="modal-visual-grid"></div>
+        <div class="detail-icon" id="detail-icon" style="font-size:72px;position:relative;z-index:2"></div>
+      </div>
+      <div class="modal-left-footer">
+        <div class="modal-category-label" id="detail-cat-label"></div>
+        <div class="chip" id="detail-chip"></div>
+      </div>
+    </div>
+    <div class="modal-right">
+      <div class="modal-right-scroll">
+        <div class="eyebrow" id="detail-eyebrow"></div>
+        <h2 class="modal-title" id="detail-title"></h2>
+        <div class="modal-price">
+          <div>
+            <div class="modal-price-main" id="detail-price"></div>
+            <div class="modal-price-old hidden" id="detail-price-old"></div>
+          </div>
+          <div class="modal-price-unit">USD</div>
+        </div>
+        <p class="modal-description" id="detail-desc"></p>
+        <div class="modal-section">
+          <div class="modal-section-title"><i class="fas fa-check-circle"></i> Incluye</div>
+          <ul class="modal-list" id="detail-perks"></ul>
+        </div>
+        <!-- User confirm row -->
+        <div class="modal-user-confirm" id="detail-user-confirm">
+          <img id="detail-confirm-head" src="" alt="" style="display:none"/>
+          <div id="detail-confirm-text" style="color:var(--text-mute);font-size:12px">
+            <i class="fas fa-exclamation-circle" style="color:var(--ruby)"></i>
+            Inicia sesión para comprar
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions-fixed">
+        <button class="btn btn-primary" style="flex:1" id="detail-add-btn" onclick="detailAddToCart()">
+          <i class="fas fa-cart-plus"></i> Añadir al carrito
+        </button>
+        <button class="btn" onclick="closeDetail()">
+          <i class="fas fa-times"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
