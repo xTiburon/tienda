@@ -1,628 +1,1401 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <meta name="description" content="Planet MC — Tienda oficial del servidor de Minecraft. Rangos, kits, llaves y más."/>
-  <meta name="keywords" content="Planet MC, Minecraft, servidor, tienda, rangos, kits, survival"/>
-  <meta property="og:title" content="Planet MC Store"/>
-  <meta property="og:description" content="Tienda oficial de Planet MC — El mejor servidor de Minecraft"/>
-  <title>Planet MC — Tienda Oficial</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebCraft Studio — Páginas Web Profesionales</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS VARIABLES ─────────────────────────────────────── */
+    :root {
+      --bg:        #080b10;
+      --surface:   #0e1420;
+      --surface2:  #141c2e;
+      --accent:    #00e5ff;
+      --accent2:   #7b61ff;
+      --gold:      #f0b429;
+      --text:      #e8edf5;
+      --muted:     #6b7a99;
+      --border:    rgba(0, 229, 255, 0.12);
+      --glow:      0 0 40px rgba(0, 229, 255, 0.25);
+      --font-head: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --radius:    16px;
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css"/>
+    /* ─── RESET & BASE ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── NOISE GRAIN OVERLAY ───────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── SCROLLBAR ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 3px; }
+
+    /* ─── UTILITY ───────────────────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,229,255,0.08);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.7); }
+    }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .section-title span { color: var(--accent); }
+    .section-desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+      line-height: 1.75;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      border-radius: 100px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:hover::after { opacity: 1; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #080b10;
+      box-shadow: 0 8px 32px rgba(0,229,255,0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 48px rgba(0,229,255,0.45);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+    }
+    .btn-outline:hover {
+      background: rgba(0,229,255,0.08);
+      transform: translateY(-2px);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #f0b429, #e07b00);
+      color: #080b10;
+      box-shadow: 0 8px 32px rgba(240,180,41,0.35);
+    }
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 48px rgba(240,180,41,0.45);
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── NAVBAR ────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 0;
+      transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(8,11,16,0.85);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      padding: 10px 24px;
+      font-size: 0.9rem;
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+    /* Mobile nav */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 70px; left: 0; right: 0;
+      background: rgba(8,11,16,0.97);
+      backdrop-filter: blur(20px);
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      z-index: 99;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .mobile-menu.open {
+      display: block;
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .mobile-menu ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .mobile-menu ul a {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .mobile-menu .btn { margin-top: 16px; width: 100%; justify-content: center; }
+
+    /* ─── HERO ──────────────────────────────────────────────── */
+    #inicio {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Animated grid bg */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+    }
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      animation: float 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .hero-orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,229,255,0.18) 0%, transparent 70%);
+      top: -100px; left: -100px;
+    }
+    .hero-orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(123,97,255,0.18) 0%, transparent 70%);
+      bottom: -50px; right: -80px;
+      animation-delay: -4s;
+    }
+    @keyframes float {
+      0%,100% { transform: translate(0,0); }
+      33%      { transform: translate(30px,-20px); }
+      66%      { transform: translate(-20px,15px); }
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+    }
+    .hero-title {
+      font-family: var(--font-head);
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin-bottom: 28px;
+      animation: fadeUp 0.9s ease both;
+    }
+    .hero-title .line1 { display: block; color: var(--text); }
+    .hero-title .line2 {
+      display: block;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 44px;
+      animation: fadeUp 0.9s 0.2s ease both;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      animation: fadeUp 0.9s 0.35s ease both;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 64px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 0.9s 0.5s ease both;
+    }
+    .stat-num {
+      font-family: var(--font-head);
+      font-size: 2.4rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    /* Floating mockup card */
+    .hero-visual {
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 420px;
+      z-index: 1;
+      animation: floatCard 6s ease-in-out infinite;
+    }
+    @keyframes floatCard {
+      0%,100% { transform: translateY(-50%) rotate(-2deg); }
+      50%      { transform: translateY(calc(-50% - 20px)) rotate(2deg); }
+    }
+    .mockup-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--glow), 0 40px 80px rgba(0,0,0,0.6);
+    }
+    .mockup-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .mockup-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .mockup-dot:nth-child(1) { background: #ff5f57; }
+    .mockup-dot:nth-child(2) { background: #ffbd2e; }
+    .mockup-dot:nth-child(3) { background: #28c840; }
+    .mockup-browser-bar {
+      background: var(--surface2);
+      border-radius: 6px;
+      height: 28px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 8px;
+    }
+    .mockup-url {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--muted);
+    }
+    .mockup-hero-strip {
+      background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(123,97,255,0.15));
+      border-radius: 10px;
+      height: 100px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mockup-hero-strip svg { width: 36px; height: 36px; opacity: 0.5; }
+    .mockup-rows { display: flex; flex-direction: column; gap: 8px; }
+    .mockup-row {
+      background: var(--surface2);
+      border-radius: 6px;
+      height: 12px;
+    }
+    .mockup-row:nth-child(2) { width: 70%; }
+    .mockup-row:nth-child(3) { width: 85%; }
+    .mockup-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .mockup-mini-card {
+      background: var(--surface2);
+      border-radius: 8px;
+      height: 52px;
+      border: 1px solid var(--border);
+    }
+    .mockup-mini-card:nth-child(1) { border-color: rgba(0,229,255,0.3); }
+
+    /* ─── SECTION WRAPPER ───────────────────────────────────── */
+    section { padding: 100px 0; }
+    section:nth-child(even) { background: var(--surface); }
+
+    /* ─── SERVICES ──────────────────────────────────────────── */
+    #servicios .section-head { margin-bottom: 64px; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .service-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: default;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,229,255,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+    .service-card:hover {
+      border-color: rgba(0,229,255,0.35);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), var(--glow);
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: rgba(0,229,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+      transition: var(--transition);
+    }
+    .service-card:hover .service-icon {
+      background: rgba(0,229,255,0.2);
+      transform: scale(1.1);
+    }
+    .service-name {
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .service-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .service-tag {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0.7;
+    }
+
+    /* ─── BENEFITS ──────────────────────────────────────────── */
+    #beneficios .section-head { margin-bottom: 64px; }
+    .benefits-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .benefits-visual {
+      position: relative;
+    }
+    .benefits-big-card {
+      background: linear-gradient(135deg, var(--surface2), var(--surface));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--glow);
+    }
+    .benefit-metric {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .benefit-metric-num {
+      font-family: var(--font-head);
+      font-size: 4rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .benefit-metric-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding-bottom: 8px;
+    }
+    .chart-bars {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      height: 100px;
+      margin-top: 12px;
+    }
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(to top, var(--accent), var(--accent2));
+      border-radius: 4px 4px 0 0;
+      opacity: 0.8;
+      transition: var(--transition);
+      animation: growBar 1.2s ease both;
+    }
+    .chart-bar:hover { opacity: 1; transform: scaleY(1.05); }
+    @keyframes growBar {
+      from { transform: scaleY(0); transform-origin: bottom; }
+      to   { transform: scaleY(1); transform-origin: bottom; }
+    }
+    .chart-bar:nth-child(1) { height: 40%; animation-delay: 0.1s; }
+    .chart-bar:nth-child(2) { height: 65%; animation-delay: 0.2s; }
+    .chart-bar:nth-child(3) { height: 50%; animation-delay: 0.3s; }
+    .chart-bar:nth-child(4) { height: 80%; animation-delay: 0.4s; }
+    .chart-bar:nth-child(5) { height: 70%; animation-delay: 0.5s; }
+    .chart-bar:nth-child(6) { height: 95%; animation-delay: 0.6s; }
+    .chart-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 8px;
+      letter-spacing: 0.1em;
+    }
+    .benefits-float-badge {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      background: var(--gold);
+      color: #080b10;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 32px rgba(240,180,41,0.4);
+    }
+    .benefits-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .benefit-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: var(--transition);
+    }
+    .benefit-item:hover {
+      background: rgba(0,229,255,0.05);
+      border-color: var(--border);
+    }
+    .benefit-icon {
+      width: 40px; height: 40px;
+      min-width: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .bi-blue  { background: rgba(0,229,255,0.12); }
+    .bi-purple{ background: rgba(123,97,255,0.12); }
+    .bi-gold  { background: rgba(240,180,41,0.12); }
+    .benefit-text h4 {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    .benefit-text p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ─── PRICING ───────────────────────────────────────────── */
+    #precios .section-head { text-align: center; margin-bottom: 16px; }
+    #precios .section-desc { margin: 0 auto 64px; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px;
+      align-items: start;
+    }
+    .price-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .price-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+    .price-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), var(--glow);
+    }
+    .price-card:hover::after { opacity: 1; }
+    .price-card.featured {
+      background: linear-gradient(160deg, rgba(0,229,255,0.07) 0%, rgba(123,97,255,0.07) 100%);
+      border-color: rgba(0,229,255,0.3);
+      box-shadow: var(--glow);
+      transform: scale(1.04);
+    }
+    .price-card.featured::after { opacity: 1; }
+    .price-card.featured:hover { transform: scale(1.04) translateY(-8px); }
+    .popular-badge {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #080b10;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-weight: 700;
+    }
+    .price-plan-name {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .price-amount {
+      font-family: var(--font-head);
+      font-size: 3.5rem;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .price-amount sup {
+      font-size: 1.4rem;
+      vertical-align: top;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .price-from {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .price-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+    }
+    .price-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
+    .price-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .price-features li .check {
+      width: 18px; height: 18px;
+      min-width: 18px;
+      border-radius: 50%;
+      background: rgba(0,229,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--accent);
+    }
+    .price-features li.included { color: var(--text); }
+    .price-features li.excluded { opacity: 0.4; text-decoration: line-through; }
+    .price-card .btn { width: 100%; justify-content: center; }
+
+    /* ─── CONTACT ───────────────────────────────────────────── */
+    #contacto {
+      background: var(--bg);
+      text-align: center;
+    }
+    .contact-wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .contact-wrapper .section-label { text-align: center; }
+    .contact-wrapper .section-title { text-align: center; }
+    .contact-wrapper .section-desc { margin: 0 auto 48px; text-align: center; }
+    .contact-discord-card {
+      background: linear-gradient(135deg, rgba(88,101,242,0.2), rgba(123,97,255,0.2));
+      border: 1px solid rgba(88,101,242,0.35);
+      border-radius: 24px;
+      padding: 48px 40px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-discord-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(88,101,242,0.3) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .discord-logo {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+    .contact-discord-card h3 {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+    .contact-discord-card p {
+      color: var(--muted);
+      margin-bottom: 32px;
+      font-size: 0.95rem;
+    }
+    .contact-promise {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .promise-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .promise-icon { font-size: 1rem; }
+
+    /* ─── FOOTER ────────────────────────────────────────────── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 48px 0 32px;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-logo {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      letter-spacing: 0.04em;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.85rem;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .hero-visual { display: none; }
+      .benefits-layout { grid-template-columns: 1fr; }
+      .benefits-float-badge { bottom: 0; right: 0; }
+    }
+    @media (max-width: 768px) {
+      section { padding: 72px 0; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .price-card.featured { transform: scale(1); }
+      .price-card.featured:hover { transform: translateY(-8px); }
+      .contact-discord-card { padding: 32px 24px; }
+      .hero-stats { gap: 24px; flex-wrap: wrap; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: 3rem; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- NOISE OVERLAY -->
-<div class="noise-overlay"></div>
-
-<!-- AMBIENT BG -->
-<div class="ambient-bg">
-  <div class="amb-orb amb-1"></div>
-  <div class="amb-orb amb-2"></div>
-  <div class="amb-orb amb-3"></div>
-</div>
-
-<!-- PARTICLES -->
-<canvas id="particles-canvas"></canvas>
-
-<!-- LOADING -->
-<div id="loading-screen">
-  <div class="loader-wrap">
-    <div class="loader-logo-mark">
-      <span></span><span></span><span></span>
-      <span></span><span></span><span></span>
-      <span></span><span></span><span></span>
-    </div>
-    <div class="loader-wordmark">Planet <em>MC</em></div>
-    <div class="loader-track"><div class="loader-fill" id="loader-fill"></div></div>
-    <div class="loader-status" id="loader-status">Iniciando tienda...</div>
-  </div>
-</div>
-
-<!-- ══════════════════════ NAV ══════════════════════ -->
-<div class="nav-wrap" id="nav-wrap">
-  <nav class="nav-inner" id="nav-inner">
-
-    <!-- Logo -->
-    <a href="#home" class="logo" data-scroll="home">
-      <div class="logo-mark">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
+  <!-- ═══════════════════════════════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════════════════════════════════ -->
+  <nav id="navbar">
+    <div class="container nav-inner">
+      <a href="#inicio" class="nav-logo">Web<span>Craft</span></a>
+      <ul class="nav-links">
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#beneficios">Beneficios</a></li>
+        <li><a href="#precios">Precios</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+      <a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener" class="btn btn-primary nav-cta">Empezar ↗</a>
+      <div class="hamburger" id="hamburger">
         <span></span><span></span><span></span>
       </div>
-      <span class="logo-text">Planet <em class="logo-mc">MC</em></span>
-    </a>
-
-    <!-- Links -->
-    <div class="nav-menu" id="nav-menu">
-      <a href="#home" class="nav-link active" data-scroll="home">
-        <i class="fas fa-home"></i> Inicio
-      </a>
-      <a href="#store" class="nav-link" data-scroll="store">
-        <i class="fas fa-store"></i> Tienda
-      </a>
-      <a href="https://discord.gg/planetmc" target="_blank" class="nav-link nav-discord">
-        <i class="fab fa-discord"></i> Discord
-      </a>
-      <a href="#soporte" class="nav-link" data-scroll="soporte">
-        <i class="fas fa-headset"></i> Soporte
-      </a>
-    </div>
-
-    <!-- Right Actions -->
-    <div class="nav-right">
-      <!-- User Btn -->
-      <div class="nav-user-wrap" id="nav-user-wrap">
-        <button class="nav-user-btn" id="nav-user-btn" onclick="toggleUserDrop()">
-          <div class="nav-user-avatar" id="nav-user-avatar">
-            <i class="fas fa-user"></i>
-          </div>
-          <span class="nav-user-name" id="nav-user-name">Iniciar sesión</span>
-          <i class="fas fa-chevron-down nav-user-chevron" id="nav-chevron"></i>
-        </button>
-
-        <!-- User Dropdown -->
-        <div class="nav-user-drop glass-drop" id="nav-user-drop">
-          <div class="drop-label">Cuenta Minecraft</div>
-          <div class="drop-platform-row">
-            <button class="plat-btn active" id="plat-java" onclick="selectPlatform('java')">☕ Java</button>
-            <button class="plat-btn" id="plat-bedrock" onclick="selectPlatform('bedrock')">🪨 Bedrock</button>
-          </div>
-          <div class="drop-input-row">
-            <input type="text" id="mc-input" placeholder="Escribe tu username..." maxlength="16" oninput="onUsernameType()"/>
-            <div class="drop-spinner hidden" id="drop-spinner">
-              <div class="spin-ring"></div>
-            </div>
-            <div class="drop-check hidden" id="drop-check"><i class="fas fa-check"></i></div>
-          </div>
-          <div class="drop-bedrock-hint hidden" id="bedrock-hint">Bedrock: sin el punto "." extra</div>
-
-          <!-- Player Preview -->
-          <div class="drop-preview hidden" id="drop-preview">
-            <img class="drop-preview-skin" id="preview-skin" src="" alt="skin"/>
-            <div class="drop-preview-info">
-              <div class="drop-preview-name" id="preview-name">—</div>
-              <div class="drop-preview-badge" id="preview-badge"></div>
-            </div>
-          </div>
-
-          <button class="btn btn-primary drop-confirm-btn" id="drop-confirm" onclick="confirmLogin()" disabled>
-            <i class="fas fa-rocket"></i> Confirmar y entrar
-          </button>
-          <button class="drop-logout-btn hidden" id="drop-logout" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-          </button>
-        </div>
-      </div>
-
-      <!-- Cart -->
-      <button class="icon-btn" id="cart-icon-btn" onclick="openCart()" title="Carrito">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-badge hidden" id="cart-badge">0</span>
-      </button>
-
-      <!-- Hamburger -->
-      <button class="nav-hamburger" id="hamburger" onclick="toggleMobile()">
-        <i class="fas fa-bars" id="ham-icon"></i>
-      </button>
     </div>
   </nav>
-</div>
 
-<!-- ══════════════════════ DRAWER OVERLAY ══════════════════════ -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeCart()"></div>
-
-<!-- ══════════════════════ CART DRAWER ══════════════════════ -->
-<aside class="cart-drawer" id="cart-drawer">
-  <div class="drawer-head">
-    <div>
-      <h3 class="drawer-title"><i class="fas fa-shopping-cart"></i> Carrito</h3>
-      <div class="cart-count-label" id="cart-count-label">0 productos</div>
-    </div>
-    <button class="icon-btn" onclick="closeCart()"><i class="fas fa-times"></i></button>
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#servicios" onclick="closeMobile()">Servicios</a></li>
+      <li><a href="#beneficios" onclick="closeMobile()">Beneficios</a></li>
+      <li><a href="#precios" onclick="closeMobile()">Precios</a></li>
+      <li><a href="#contacto" onclick="closeMobile()">Contacto</a></li>
+    </ul>
+    <a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener" class="btn btn-primary">Empezar ↗</a>
   </div>
 
-  <!-- Logged user in cart -->
-  <div class="drawer-user" id="drawer-user-section">
-    <div class="drawer-user-label">
-      <div class="status-dot" id="drawer-status-dot"></div>
-      Comprando como
-    </div>
-    <div class="drawer-user-not-logged" id="drawer-not-logged">
-      <i class="fas fa-user-slash"></i>
-      <span>No has iniciado sesión</span>
-      <button class="btn btn-sm btn-ghost" onclick="closeCart(); openUserDrop();">Iniciar sesión</button>
-    </div>
-    <div class="drawer-user-logged hidden" id="drawer-logged">
-      <img id="drawer-head" src="" alt="head" class="drawer-head-img"/>
-      <div>
-        <div class="drawer-username" id="drawer-username">—</div>
-        <div class="drawer-platform" id="drawer-platform"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Items -->
-  <div class="drawer-items" id="drawer-items">
-    <div class="empty-cart" id="empty-cart-msg">
-      <div class="empty-cart-icon"><i class="fas fa-box-open"></i></div>
-      <p>Tu carrito está vacío</p>
-      <small>Explora la tienda y añade productos</small>
-    </div>
-    <div id="cart-items-list"></div>
-  </div>
-
-  <!-- Footer -->
-  <div class="drawer-foot">
-    <div class="cart-total">
-      <span>Total</span>
-      <span id="cart-total-amount">$0.00</span>
-    </div>
-    <button class="btn btn-primary btn-lg" style="width:100%" onclick="openCheckout()" id="checkout-btn">
-      <i class="fas fa-credit-card"></i> Completar Compra
-    </button>
-    <p class="cart-secure-note"><i class="fas fa-lock"></i> Pago seguro vía Tebex</p>
-  </div>
-</aside>
-
-<!-- ══════════════════════ CHECKOUT MODAL ══════════════════════ -->
-<div class="modal-overlay hidden" id="checkout-overlay">
-  <div class="modal-box glass-card" id="checkout-modal">
-    <button class="modal-close icon-btn" onclick="closeCheckout()"><i class="fas fa-times"></i></button>
-    <div class="modal-header">
-      <div class="modal-header-icon"><i class="fas fa-shield-check"></i></div>
-      <h2>Confirmar Compra</h2>
-      <p>Revisa tu pedido antes de continuar a Tebex</p>
-    </div>
-
-    <div class="checkout-user-row" id="checkout-user-row">
-      <img id="co-head" src="" alt="" class="co-head-img"/>
-      <div>
-        <div id="co-username" class="co-username"></div>
-        <div id="co-platform" class="co-platform-badge"></div>
-      </div>
-    </div>
-
-    <div class="checkout-items" id="checkout-items-list"></div>
-
-    <div class="checkout-total-row">
-      <span>Total a pagar</span>
-      <span id="co-total" class="co-total"></span>
-    </div>
-
-    <div class="checkout-terms">
-      <label class="term-label">
-        <input type="checkbox" id="term-1" onchange="evalTerms()"/>
-        <span class="checkmark"></span>
-        Acepto los <a href="#">Términos y Condiciones</a>
-      </label>
-      <label class="term-label">
-        <input type="checkbox" id="term-2" onchange="evalTerms()"/>
-        <span class="checkmark"></span>
-        Acepto la <a href="#">Política de Privacidad</a>
-      </label>
-      <label class="term-label">
-        <input type="checkbox" id="term-3" onchange="evalTerms()"/>
-        <span class="checkmark"></span>
-        Entiendo que las compras digitales <strong>no tienen reembolso</strong>
-      </label>
-    </div>
-
-    <button class="btn btn-primary btn-lg" style="width:100%; margin-top:8px" id="go-tebex-btn" onclick="goToTebex()" disabled>
-      <i class="fas fa-external-link-alt"></i> Ir a Tebex y Pagar
-    </button>
-    <p class="tebex-note"><i class="fas fa-lock"></i> Serás redirigido a Tebex de forma segura</p>
-  </div>
-</div>
-
-<!-- ══════════════════════ MOBILE MENU ══════════════════════ -->
-<div class="mobile-menu hidden" id="mobile-menu">
-  <div class="mobile-menu-head">
-    <div class="logo">
-      <div class="logo-mark sm">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-      </div>
-      Planet <em class="logo-mc">MC</em>
-    </div>
-    <button class="icon-btn" onclick="toggleMobile()"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="mobile-menu-body">
-    <a href="#home" class="mobile-link" onclick="toggleMobile()"><i class="fas fa-home"></i> Inicio <i class="fas fa-chevron-right"></i></a>
-    <a href="#store" class="mobile-link" onclick="toggleMobile()"><i class="fas fa-store"></i> Tienda <i class="fas fa-chevron-right"></i></a>
-    <a href="https://discord.gg/planetmc" target="_blank" class="mobile-link discord"><i class="fab fa-discord"></i> Discord <i class="fas fa-chevron-right"></i></a>
-    <a href="#soporte" class="mobile-link" onclick="toggleMobile()"><i class="fas fa-headset"></i> Soporte <i class="fas fa-chevron-right"></i></a>
-  </div>
-</div>
-
-<!-- ══════════════════════ MAIN ══════════════════════ -->
-<main>
-
-<!-- ─── HERO ─── -->
-<section class="hero" id="home">
-  <div class="hero-bg">
-    <div class="hero-gradient"></div>
+  <!-- ═══════════════════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════════════════════ -->
+  <section id="inicio">
     <div class="hero-grid"></div>
-  </div>
-
-  <!-- Server IPs -->
-  <div class="server-ips">
-    <button class="server-ip-pill" onclick="copyIP('play.planetmc.net', this)">
-      <span class="server-ip-tag">Java</span>
-      <span class="server-ip-dot"></span>
-      <span class="server-ip-addr">play.planetmc.net</span>
-      <i class="fas fa-copy" style="font-size:10px;opacity:.4"></i>
-      <span class="server-ip-copied">¡Copiado!</span>
-    </button>
-    <button class="server-ip-pill" onclick="copyIP('be.planetmc.net', this)">
-      <span class="server-ip-tag bedrock">Bedrock</span>
-      <span class="server-ip-dot"></span>
-      <span class="server-ip-addr">be.planetmc.net</span>
-      <i class="fas fa-copy" style="font-size:10px;opacity:.4"></i>
-      <span class="server-ip-copied">¡Copiado!</span>
-    </button>
-  </div>
-
-  <div class="hero-inner container">
-    <div class="eyebrow"><span class="eyebrow-dot"></span> Servidor Premium · Latinoamérica</div>
-
-    <h1 class="hero-title">
-      La mejor experiencia<br/>
-      <span class="hero-title-accent">Minecraft</span> del continente
-    </h1>
-
-    <p class="hero-sub">Rangos exclusivos, kits épicos, llaves misteriosas y mucho más. Únete a miles de jugadores en Planet MC.</p>
-
-    <div class="hero-ctas">
-      <a href="https://discord.gg/planetmc" target="_blank" class="btn btn-primary btn-lg">
-        <i class="fab fa-discord"></i> Unirse al Discord
-      </a>
-      <a href="#store" class="btn btn-lg" data-scroll="store">
-        <i class="fas fa-store"></i> Ver Tienda
-      </a>
-    </div>
-
-    <!-- Stats row -->
-    <div class="hero-stats-row">
-      <div class="hero-stat">
-        <strong class="stat-num" data-target="1247">0</strong>
-        <span>Jugadores Online</span>
-      </div>
-      <div class="hero-stat-sep"></div>
-      <div class="hero-stat">
-        <strong class="stat-num" data-target="9812">0</strong>
-        <span>Discord</span>
-      </div>
-      <div class="hero-stat-sep"></div>
-      <div class="hero-stat">
-        <strong class="stat-num" data-target="2403">0</strong>
-        <span>Donadores</span>
-      </div>
-      <div class="hero-stat-sep"></div>
-      <div class="hero-stat">
-        <strong class="stat-num" data-target="4">0</strong>
-        <span>Años online</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── MONTHLY META ─── -->
-<section class="section-donate">
-  <div class="container">
-    <div class="donate-grid-3">
-
-      <!-- Meta card -->
-      <div class="card donate-meta">
-        <div class="glow-ring"></div>
-        <div class="donate-head">
-          <div class="eyebrow"><span class="eyebrow-dot"></span> Meta Mensual</div>
-          <div class="donate-date" id="meta-month-label">Mayo 2025</div>
-        </div>
-        <div class="meta-goal-row">
-          <div class="meta-pct-num" id="meta-pct">0%</div>
-          <div class="meta-goal-reward">
-            Objetivo: <strong id="meta-goal-val">$500</strong>
-          </div>
-        </div>
-        <div class="progress-track progress-track-lg">
-          <div class="progress-fill" id="meta-fill" style="width:0%"></div>
-        </div>
-        <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:12px;color:var(--text-mute)">Recaudado este mes</span>
-          <span style="font-family:var(--font-display);font-weight:700;color:var(--accent)" id="meta-raised">$0</span>
-        </div>
-        <div class="meta-chart-bottom">
-          <div class="meta-chart-head">
-            <span class="meta-chart-live">
-              <span class="server-status-dot-sm online"></span>
-              Servidor online · <strong id="online-count">—</strong> jugadores
-            </span>
-            <span class="meta-chart-label">LIVE</span>
-          </div>
-          <!-- Mini bar chart -->
-          <div class="mini-bar-chart" id="mini-bar-chart"></div>
-        </div>
-      </div>
-
-      <!-- Podium / Top Donadores -->
-      <div class="card donate-podium">
-        <div class="glow-ring"></div>
-        <div class="donate-head">
-          <div class="eyebrow"><span class="eyebrow-dot"></span> Top Donadores</div>
-          <div class="donate-live"><span class="server-status-dot-sm online"></span> Este mes</div>
-        </div>
-        <div class="podium" id="podium-container">
-          <!-- Filled by JS -->
-        </div>
-      </div>
-
-      <!-- Recientes -->
-      <div class="card donate-recent">
-        <div class="glow-ring"></div>
-        <div class="donate-head">
-          <div class="eyebrow"><span class="eyebrow-dot"></span> Donaciones Recientes</div>
-          <div class="donate-live"><span class="server-status-dot-sm online"></span> Tiempo real</div>
-        </div>
-        <ul class="recent-list" id="recent-list">
-          <!-- Filled by JS -->
-        </ul>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ─── STORE ─── -->
-<section class="section" id="store">
-  <div class="container">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow"><span class="eyebrow-dot"></span> Survival · Planet MC</div>
-        <h2 class="section-title">Elige tu <span style="color:var(--accent)">categoría</span></h2>
-      </div>
-      <p class="section-sub">Todo lo que necesitas para dominar el servidor. Rangos, kits, cosméticos y mucho más.</p>
-    </div>
-
-    <!-- Category filter strip -->
-    <div class="store-filters">
-      <div class="cat-strip" id="cat-strip">
-        <button class="cat-chip active" data-cat="all" onclick="filterCat(this,'all')">
-          <i class="fas fa-globe"></i> Todos
-          <span class="cat-count" id="count-all">0</span>
-        </button>
-        <button class="cat-chip" data-cat="rangos-perm" onclick="filterCat(this,'rangos-perm')">
-          <i class="fas fa-crown"></i> Rangos Perm.
-          <span class="cat-count" id="count-rangos-perm">0</span>
-        </button>
-        <button class="cat-chip" data-cat="rangos-temp" onclick="filterCat(this,'rangos-temp')">
-          <i class="fas fa-clock"></i> Rangos Temp.
-          <span class="cat-count" id="count-rangos-temp">0</span>
-        </button>
-        <button class="cat-chip" data-cat="kits" onclick="filterCat(this,'kits')">
-          <i class="fas fa-toolbox"></i> Kits
-          <span class="cat-count" id="count-kits">0</span>
-        </button>
-        <button class="cat-chip" data-cat="llaves" onclick="filterCat(this,'llaves')">
-          <i class="fas fa-key"></i> Llaves
-          <span class="cat-count" id="count-llaves">0</span>
-        </button>
-        <button class="cat-chip" data-cat="spawners" onclick="filterCat(this,'spawners')">
-          <i class="fas fa-spider"></i> Spawners
-          <span class="cat-count" id="count-spawners">0</span>
-        </button>
-        <button class="cat-chip" data-cat="items" onclick="filterCat(this,'items')">
-          <i class="fas fa-magic"></i> Ítems
-          <span class="cat-count" id="count-items">0</span>
-        </button>
-        <button class="cat-chip" data-cat="cosmeticos" onclick="filterCat(this,'cosmeticos')">
-          <i class="fas fa-paint-brush"></i> Cosméticos
-          <span class="cat-count" id="count-cosmeticos">0</span>
-        </button>
-        <button class="cat-chip" data-cat="boosters" onclick="filterCat(this,'boosters')">
-          <i class="fas fa-rocket"></i> Boosters
-          <span class="cat-count" id="count-boosters">0</span>
-        </button>
-      </div>
-
-      <!-- Search -->
-      <div class="store-search-row">
-        <div class="store-search">
-          <i class="fas fa-search"></i>
-          <input type="text" id="store-search-input" placeholder="Buscar productos..." oninput="searchProducts()"/>
-          <button class="search-clear hidden" id="search-clear" onclick="clearSearch()"><i class="fas fa-times"></i></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Products grid -->
-    <div class="product-grid" id="product-grid">
-      <!-- Filled by JS -->
-    </div>
-
-    <div class="empty-products hidden" id="empty-products">
-      <div class="empty-products-icon"><i class="fas fa-search"></i></div>
-      <p>No se encontraron productos</p>
-      <small>Intenta con otro término o categoría</small>
-    </div>
-
-  </div>
-</section>
-
-<!-- ─── SOPORTE ─── -->
-<section class="section" id="soporte">
-  <div class="container">
-    <div class="card support-card">
-      <div class="glow-ring"></div>
-      <div class="support-inner">
-        <div>
-          <div class="eyebrow" style="margin-bottom:16px"><span class="eyebrow-dot"></span> Soporte 24/7</div>
-          <h2 class="section-title">¿Necesitas <span style="color:var(--accent)">ayuda?</span></h2>
-          <p class="section-sub" style="max-width:100%;margin-top:12px">
-            Nuestro equipo está disponible para ayudarte con cualquier problema. Únete al Discord o abre un ticket de soporte.
-          </p>
-          <div class="support-ctas">
-            <a href="https://discord.gg/planetmc" target="_blank" class="btn btn-primary">
-              <i class="fab fa-discord"></i> Abrir ticket en Discord
-            </a>
-            <a href="#" class="btn">
-              <i class="fas fa-envelope"></i> Enviar email
-            </a>
-          </div>
-        </div>
-        <div class="support-stats">
-          <div><strong>~5 min</strong><span>Tiempo respuesta</span></div>
-          <div><strong>24/7</strong><span>Disponibilidad</span></div>
-          <div><strong>99.9%</strong><span>Uptime servidor</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <div class="logo" style="margin-bottom:14px">
-          <div class="logo-mark sm">
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
-          </div>
-          Planet <em class="logo-mc">MC</em>
-        </div>
-        <p style="color:var(--text-dim);font-size:13px;line-height:1.7;max-width:260px">
-          El servidor de Minecraft más épico de Latinoamérica. Únete a nuestra comunidad.
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="badge">✦ Diseño Web Profesional</div>
+        <h1 class="hero-title">
+          <span class="line1">TU NEGOCIO</span>
+          <span class="line2">ONLINE HOY</span>
+        </h1>
+        <p class="hero-sub">
+          Creamos páginas web modernas, rápidas y atractivas para negocios,
+          tiendas, emprendimientos y marcas personales. Tu presencia digital,
+          hecha para impresionar y vender.
         </p>
-        <div style="display:flex;gap:10px;margin-top:18px">
-          <a href="https://discord.gg/planetmc" target="_blank" class="icon-btn"><i class="fab fa-discord"></i></a>
-          <a href="#" class="icon-btn"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="icon-btn"><i class="fab fa-youtube"></i></a>
-          <a href="#" class="icon-btn"><i class="fab fa-tiktok"></i></a>
+        <div class="hero-actions">
+          <a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener" class="btn btn-primary" style="font-size:1.1rem; padding:18px 44px;">
+            🛒 Comprar Ahora
+          </a>
+          <a href="#servicios" class="btn btn-outline">Ver Servicios →</a>
         </div>
-      </div>
-      <div>
-        <h5>Tienda</h5>
-        <ul>
-          <li><a href="#store" onclick="filterCat(null,'rangos-perm')">Rangos Permanentes</a></li>
-          <li><a href="#store" onclick="filterCat(null,'rangos-temp')">Rangos Temporales</a></li>
-          <li><a href="#store" onclick="filterCat(null,'kits')">Kits</a></li>
-          <li><a href="#store" onclick="filterCat(null,'llaves')">Llaves</a></li>
-          <li><a href="#store" onclick="filterCat(null,'cosmeticos')">Cosméticos</a></li>
-          <li><a href="#store" onclick="filterCat(null,'boosters')">Boosters</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Servidor</h5>
-        <ul>
-          <li><a href="#">play.planetmc.net</a></li>
-          <li><a href="#">Reglas del servidor</a></li>
-          <li><a href="#">Mapa del mundo</a></li>
-          <li><a href="#">Reportar bug</a></li>
-          <li><a href="#">Aplicar como staff</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Legal</h5>
-        <ul>
-          <li><a href="#">Términos y condiciones</a></li>
-          <li><a href="#">Política de privacidad</a></li>
-          <li><a href="#">Política de reembolsos</a></li>
-          <li><a href="#">EULA de Minecraft</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2025 Planet MC — No afiliado con Mojang Studios</span>
-      <span style="color:var(--accent);font-family:var(--font-mono);font-size:11px">play.planetmc.net</span>
-    </div>
-  </div>
-</footer>
-
-<!-- TOAST -->
-<div id="toast-wrap"></div>
-
-<!-- PRODUCT DETAIL MODAL -->
-<div class="modal-overlay hidden" id="detail-overlay">
-  <div class="modal card" id="detail-modal" style="--p-color:var(--accent);--p-deep:var(--bg-1)">
-    <button class="modal-close icon-btn" onclick="closeDetail()"><i class="fas fa-times"></i></button>
-    <div class="modal-left" id="detail-left">
-      <div class="modal-visual" id="detail-visual">
-        <div class="modal-visual-bg"></div>
-        <div class="modal-visual-grid"></div>
-        <div class="detail-icon" id="detail-icon" style="font-size:72px;position:relative;z-index:2"></div>
-      </div>
-      <div class="modal-left-footer">
-        <div class="modal-category-label" id="detail-cat-label"></div>
-        <div class="chip" id="detail-chip"></div>
-      </div>
-    </div>
-    <div class="modal-right">
-      <div class="modal-right-scroll">
-        <div class="eyebrow" id="detail-eyebrow"></div>
-        <h2 class="modal-title" id="detail-title"></h2>
-        <div class="modal-price">
+        <div class="hero-stats">
           <div>
-            <div class="modal-price-main" id="detail-price"></div>
-            <div class="modal-price-old hidden" id="detail-price-old"></div>
+            <div class="stat-num">+200</div>
+            <div class="stat-label">Proyectos entregados</div>
           </div>
-          <div class="modal-price-unit">USD</div>
-        </div>
-        <p class="modal-description" id="detail-desc"></p>
-        <div class="modal-section">
-          <div class="modal-section-title"><i class="fas fa-check-circle"></i> Incluye</div>
-          <ul class="modal-list" id="detail-perks"></ul>
-        </div>
-        <!-- User confirm row -->
-        <div class="modal-user-confirm" id="detail-user-confirm">
-          <img id="detail-confirm-head" src="" alt="" style="display:none"/>
-          <div id="detail-confirm-text" style="color:var(--text-mute);font-size:12px">
-            <i class="fas fa-exclamation-circle" style="color:var(--ruby)"></i>
-            Inicia sesión para comprar
+          <div>
+            <div class="stat-num">48h</div>
+            <div class="stat-label">Tiempo promedio</div>
+          </div>
+          <div>
+            <div class="stat-num">5★</div>
+            <div class="stat-label">Valoración clientes</div>
           </div>
         </div>
-      </div>
-      <div class="modal-actions-fixed">
-        <button class="btn btn-primary" style="flex:1" id="detail-add-btn" onclick="detailAddToCart()">
-          <i class="fas fa-cart-plus"></i> Añadir al carrito
-        </button>
-        <button class="btn" onclick="closeDetail()">
-          <i class="fas fa-times"></i> Cerrar
-        </button>
       </div>
     </div>
-  </div>
-</div>
+    <!-- Floating mockup -->
+    <div class="hero-visual">
+      <div class="mockup-card">
+        <div class="mockup-bar">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+        </div>
+        <div class="mockup-browser-bar">
+          <span style="color:var(--muted);font-size:9px;">🔒</span>
+          <span class="mockup-url">tunegocio.com</span>
+        </div>
+        <div class="mockup-hero-strip">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="28" height="28" rx="6" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 2"/>
+            <path d="M18 12v12M12 18h12" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="mockup-rows">
+          <div class="mockup-row" style="width:90%"></div>
+          <div class="mockup-row"></div>
+          <div class="mockup-row"></div>
+        </div>
+        <div class="mockup-cards">
+          <div class="mockup-mini-card"></div>
+          <div class="mockup-mini-card"></div>
+          <div class="mockup-mini-card"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<script src="script.js"></script>
+  <!-- ═══════════════════════════════════════════════════════════
+       SERVICIOS
+  ══════════════════════════════════════════════════════════════ -->
+  <section id="servicios">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="section-label">// Lo que hacemos</p>
+        <h2 class="section-title">Todo lo que tu<br><span>negocio necesita</span></h2>
+        <p class="section-desc">Desde diseño hasta hosting, cubrimos cada aspecto de tu presencia digital con calidad premium.</p>
+      </div>
+      <div class="services-grid">
+
+        <div class="service-card reveal">
+          <div class="service-icon">🎨</div>
+          <div class="service-name">Diseño Moderno</div>
+          <p class="service-desc">Páginas web visualmente impresionantes, únicas para tu marca, con animaciones y efectos premium.</p>
+          <span class="service-tag">— UI/UX Design</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.1s">
+          <div class="service-icon">🛒</div>
+          <div class="service-name">Tiendas Online</div>
+          <p class="service-desc">E-commerce completo con carrito, pagos, gestión de productos y panel de administración.</p>
+          <span class="service-tag">— E-Commerce</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.2s">
+          <div class="service-icon">🚀</div>
+          <div class="service-name">Landing Pages</div>
+          <p class="service-desc">Páginas de conversión optimizadas para capturar leads y convertir visitantes en clientes.</p>
+          <span class="service-tag">— Conversión</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.3s">
+          <div class="service-icon">📱</div>
+          <div class="service-name">Diseño Responsive</div>
+          <p class="service-desc">Perfecto en cualquier dispositivo: celular, tablet o PC. Experiencia fluida en todas las pantallas.</p>
+          <span class="service-tag">— Mobile First</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.0s">
+          <div class="service-icon">🔗</div>
+          <div class="service-name">Redes Sociales</div>
+          <p class="service-desc">Integración completa con Instagram, Facebook, WhatsApp, TikTok y todas tus plataformas.</p>
+          <span class="service-tag">— Integración</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.1s">
+          <div class="service-icon">📬</div>
+          <div class="service-name">Formularios</div>
+          <p class="service-desc">Formularios de contacto inteligentes que te envían consultas y pedidos directo a tu correo o WhatsApp.</p>
+          <span class="service-tag">— Contacto</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.2s">
+          <div class="service-icon">🔍</div>
+          <div class="service-name">SEO Básico</div>
+          <p class="service-desc">Optimización para motores de búsqueda para que Google encuentre tu negocio antes que el de la competencia.</p>
+          <span class="service-tag">— Posicionamiento</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.3s">
+          <div class="service-icon">⚡</div>
+          <div class="service-name">Velocidad y Rendimiento</div>
+          <p class="service-desc">Código optimizado para carga ultrarrápida. Páginas que retienen visitantes y mejoran conversiones.</p>
+          <span class="service-tag">— Performance</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.0s">
+          <div class="service-icon">🛠️</div>
+          <div class="service-name">Soporte Técnico</div>
+          <p class="service-desc">Asistencia continua post-entrega para que tu página siempre esté funcionando al 100%.</p>
+          <span class="service-tag">— Soporte 24/7</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.1s">
+          <div class="service-icon">🖥️</div>
+          <div class="service-name">Panel Administrativo</div>
+          <p class="service-desc">Gestiona tu contenido, productos y pedidos de forma fácil desde un panel intuitivo personalizado.</p>
+          <span class="service-tag">— CMS</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.2s">
+          <div class="service-icon">🌐</div>
+          <div class="service-name">Hosting y Dominio</div>
+          <p class="service-desc">Asesoramiento completo en la elección y configuración de hosting y dominio profesional para tu sitio.</p>
+          <span class="service-tag">— Infraestructura</span>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay:0.3s">
+          <div class="service-icon">✏️</div>
+          <div class="service-name">Diseño Personalizado</div>
+          <p class="service-desc">Cada página es única, diseñada desde cero con la identidad visual de tu marca, sin plantillas genéricas.</p>
+          <span class="service-tag">— Custom Design</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       BENEFICIOS
+  ══════════════════════════════════════════════════════════════ -->
+  <section id="beneficios">
+    <div class="container">
+      <div class="benefits-layout">
+        <!-- Visual -->
+        <div class="benefits-visual reveal">
+          <div class="benefits-big-card">
+            <div class="benefit-metric">
+              <div class="benefit-metric-num">+340%</div>
+              <div class="benefit-metric-label">más consultas<br>con página web</div>
+            </div>
+            <div class="chart-bars">
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+              <div class="chart-bar"></div>
+            </div>
+            <div class="chart-label">Crecimiento mensual de tu negocio online</div>
+          </div>
+          <div class="benefits-float-badge">
+            📈 Ventas las 24 horas
+          </div>
+        </div>
+        <!-- List -->
+        <div class="reveal" style="transition-delay:0.2s">
+          <p class="section-label">// Por qué lo necesitas</p>
+          <h2 class="section-title">Los beneficios de estar <span>online</span></h2>
+          <div class="benefits-list">
+
+            <div class="benefit-item">
+              <div class="benefit-icon bi-blue">👥</div>
+              <div class="benefit-text">
+                <h4>Más clientes, más ventas</h4>
+                <p>Millones de personas buscan servicios en Google a diario. Sin presencia web, tu negocio es invisible para ellos.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon bi-purple">⭐</div>
+              <div class="benefit-text">
+                <h4>Imagen profesional y confianza</h4>
+                <p>Una página web de calidad transmite seriedad y credibilidad, generando mayor confianza en tus clientes.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon bi-gold">🌙</div>
+              <div class="benefit-text">
+                <h4>Ventas automáticas 24/7</h4>
+                <p>Tu tienda o catálogo nunca cierra. Recibe pedidos y consultas mientras duermes, los 365 días del año.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon bi-blue">🌍</div>
+              <div class="benefit-text">
+                <h4>Presencia online global</h4>
+                <p>Expande tu alcance más allá de tu ciudad o país. Tu negocio disponible para el mundo entero.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon bi-purple">⚙️</div>
+              <div class="benefit-text">
+                <h4>Automatización de pedidos</h4>
+                <p>Formularios y tiendas que capturan y procesan pedidos automáticamente, ahorrándote tiempo valioso.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon bi-gold">📊</div>
+              <div class="benefit-text">
+                <h4>Crecimiento sostenible</h4>
+                <p>Una web bien hecha es la base del crecimiento digital. La inversión que más retorno genera a largo plazo.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PRECIOS
+  ══════════════════════════════════════════════════════════════ -->
+  <section id="precios">
+    <div class="container">
+      <div class="section-head reveal" style="text-align:center">
+        <p class="section-label" style="text-align:center">// Planes y precios</p>
+        <h2 class="section-title" style="text-align:center">Elige tu <span>plan ideal</span></h2>
+        <p class="section-desc" style="margin:0 auto 64px; text-align:center">Transparencia total en precios. Sin sorpresas. Sin costos ocultos.</p>
+      </div>
+      <div class="pricing-grid">
+
+        <!-- BÁSICO -->
+        <div class="price-card reveal">
+          <p class="price-plan-name">Básico</p>
+          <div class="price-amount"><sup>$</sup>100</div>
+          <p class="price-from">Precio de inicio</p>
+          <p class="price-desc">Ideal para emprendimientos y negocios que quieren dar sus primeros pasos en el mundo digital.</p>
+          <ul class="price-features">
+            <li class="included"><span class="check">✓</span> Diseño personalizado (hasta 3 secciones)</li>
+            <li class="included"><span class="check">✓</span> Responsive para celular y PC</li>
+            <li class="included"><span class="check">✓</span> Formulario de contacto</li>
+            <li class="included"><span class="check">✓</span> Integración con redes sociales</li>
+            <li class="included"><span class="check">✓</span> SEO básico</li>
+            <li class="included"><span class="check">✓</span> Entrega en 48 horas</li>
+            <li class="excluded"><span class="check" style="opacity:.4">✗</span> Tienda online</li>
+            <li class="excluded"><span class="check" style="opacity:.4">✗</span> Panel administrativo</li>
+          </ul>
+          <a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener" class="btn btn-outline">Contratar →</a>
+        </div>
+
+        <!-- PROFESIONAL -->
+        <div class="price-card featured reveal" style="transition-delay:0.15s">
+          <div class="popular-badge">⭐ Más popular</div>
+          <p class="price-plan-name">Profesional</p>
+          <div class="price-amount"><sup>$</sup>250</div>
+          <p class="price-from">Precio de inicio</p>
+          <p class="price-desc">Para negocios y marcas que quieren una presencia web completa, impresionante y funcional.</p>
+          <ul class="price-features">
+            <li class="included"><span class="check">✓</span> Diseño premium ilimitado</li>
+            <li class="included"><span class="check">✓</span> Responsive perfecto</li>
+            <li class="included"><span class="check">✓</span> Animaciones y efectos</li>
+            <li class="included"><span class="check">✓</span> Formularios avanzados</li>
+            <li class="included"><span class="check">✓</span> SEO optimizado</li>
+            <li class="included"><span class="check">✓</span> Integración completa RRSS</li>
+            <li class="included"><span class="check">✓</span> Panel básico de contenido</li>
+            <li class="included"><span class="check">✓</span> Soporte 30 días</li>
+          </ul>
+          <a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener" class="btn btn-primary">🛒 Comprar Ahora</a>
+        </div>
+
+        <!-- TIENDA ONLINE -->
+        <div class="price-card reveal" style="transition-delay:0.3s">
+          <p class="price-plan-name">Tienda Online</p>
+          <div class="price-amount" style="background:linear-gradient(90deg,var(--gold),#e07b00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;"><sup style="-webkit-text-fill-color:var(--gold)">$</sup>500</div>
+          <p class="price-from">Precio de inicio</p>
+          <p class="price-desc">E-commerce completo para vender tus productos o servicios online de forma profesional y automatizada.</p>
+          <ul class="price-features">
+            <li class="included"><span class="check">✓</span> Todo lo del plan Profesional</li>
+            <li class="included"><span class="check">✓</span> Catálogo de productos</li>
+            <li class="included"><span class="check">✓</span> Carrito de compras</li>
+            <li class="included"><span class="check">✓</span> Pasarela de pagos</li>
+            <li class="included"><span class="check">✓</span> Panel administrativo completo</li>
+            <li class="included"><span class="check">✓</span> Gestión de pedidos</li>
+            <li class="included"><span class="check">✓</span> Cupones y descuentos</li>
+            <li class="included"><span class="check">✓</span> Soporte técnico 60 días</li>
+          </ul>
+          <a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener" class="btn btn-gold">🛒 Comprar Ahora</a>
+        </div>
+
+      </div>
+      <!-- Extra CTA -->
+      <div class="reveal" style="text-align:center; margin-top:56px;">
+        <p style="color:var(--muted); margin-bottom:20px;">¿Necesitas algo personalizado? Hablemos y armamos un plan a tu medida.</p>
+        <a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener" class="btn btn-outline">💬 Solicitar presupuesto personalizado</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CONTACTO
+  ══════════════════════════════════════════════════════════════ -->
+  <section id="contacto">
+    <div class="container">
+      <div class="contact-wrapper">
+        <p class="section-label reveal">// Hablemos</p>
+        <h2 class="section-title reveal">¿Listo para dar el<br><span>siguiente paso?</span></h2>
+        <p class="section-desc reveal">Únete a nuestro Discord, cuéntanos tu proyecto y comenzamos a construir tu presencia digital hoy mismo.</p>
+        <div class="contact-discord-card reveal">
+          <div class="discord-logo">💬</div>
+          <h3>Únete a nuestro Discord</h3>
+          <p>Respuesta rápida, atención personalizada y asesoría gratuita sobre tu proyecto web.</p>
+          <a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener" class="btn btn-primary" style="font-size:1.05rem; padding:18px 48px;">
+            Contáctanos en Discord ↗
+          </a>
+        </div>
+        <div class="contact-promise reveal">
+          <div class="promise-item">
+            <span class="promise-icon">⚡</span>
+            <span>Respuesta en menos de 24h</span>
+          </div>
+          <div class="promise-item">
+            <span class="promise-icon">💰</span>
+            <span>Asesoría gratuita</span>
+          </div>
+          <div class="promise-item">
+            <span class="promise-icon">🤝</span>
+            <span>Sin compromiso</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-logo">Web<span>Craft</span> Studio</div>
+      <p class="footer-copy">© 2025 WebCraft Studio. Todos los derechos reservados.</p>
+      <ul class="footer-links">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#precios">Precios</a></li>
+        <li><a href="https://discord.gg/MFnc2dGMeQ" target="_blank" rel="noopener">Discord</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+    // ── Navbar scroll ──────────────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // ── Hamburger menu ──────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+
+    function closeMobile() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+        closeMobile();
+      }
+    });
+
+    // ── Scroll reveal ───────────────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── Staggered child reveal ──────────────────────────────────
+    document.querySelectorAll('.services-grid, .benefits-list, .pricing-grid').forEach(grid => {
+      [...grid.children].forEach((child, i) => {
+        if (!child.classList.contains('reveal')) {
+          child.classList.add('reveal');
+          child.style.transitionDelay = (i * 0.08) + 's';
+          observer.observe(child);
+        }
+      });
+    });
+
+    // ── Smooth counter animation ────────────────────────────────
+    function animateCounter(el, target, suffix = '') {
+      let start = 0;
+      const duration = 1800;
+      const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    // Trigger counter when hero stats become visible
+    const statsSection = document.querySelector('.hero-stats');
+    if (statsSection) {
+      const statsObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          const nums = statsSection.querySelectorAll('.stat-num');
+          animateCounter(nums[0], 200, '+');
+          animateCounter(nums[1], 48, 'h');
+          statsObserver.unobserve(statsSection);
+        }
+      }, { threshold: 0.5 });
+      statsObserver.observe(statsSection);
+    }
+
+    // ── Parallax orbs ───────────────────────────────────────────
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const y = window.scrollY;
+          document.querySelector('.hero-orb-1').style.transform = `translate(${y * 0.05}px, ${y * -0.06}px)`;
+          document.querySelector('.hero-orb-2').style.transform = `translate(${y * -0.04}px, ${y * 0.04}px)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // ── Active nav link highlight ───────────────────────────────
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 200) current = s.id;
+      });
+      navLinks.forEach(link => {
+        link.style.color = link.getAttribute('href') === '#' + current
+          ? 'var(--text)'
+          : '';
+      });
+    }, { passive: true });
+  </script>
 </body>
 </html>
